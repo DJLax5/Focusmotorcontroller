@@ -11,8 +11,9 @@ uint16_t timerCounter = 0;
 uint32_t stepCounter = 0;
 uint8_t flag10ms = 0;
 uint32_t periodZ = 0;
-volatile uint8_t flagIsr = 0;
 int8_t prevState = 0;
+volatile uint8_t flagIsr = 0;
+
 
 void init() {
 	OCR1A = 80;
@@ -55,7 +56,6 @@ int main(void)
 				STATUS_LED_PORT |= STATUS_LED_PIN;
 			} 
 			
-			
 			if (state != prevState) {
 				if (state) {
 					enableDriver();
@@ -68,7 +68,6 @@ int main(void)
 			}
 			prevState = state;
 		}
-		
 		
 		if (flagIsr) {
 			flagIsr = 0;	
@@ -92,7 +91,6 @@ int main(void)
 
 ISR (TIMER1_COMPA_vect) { // every 5us
 	flagIsr = 1;
-	
 }
 
 
