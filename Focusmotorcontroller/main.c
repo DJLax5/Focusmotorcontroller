@@ -7,17 +7,18 @@
 
 #include "config.h"
 
-volatile uint16_t timerCounter = 0;
-volatile uint32_t stepCounter = 0;
-volatile uint8_t flag10ms = 0;
-volatile uint32_t periodZ = 0;
-
+uint16_t timerCounter = 0;
+uint32_t stepCounter = 0;
+uint8_t flag10ms = 0;
+uint32_t periodZ = 0;
+volatile uint8_t flagIsr = 0;
 int8_t prevState = 0;
 
 void init() {
-	OCR1A = 1;
+	OCR1A = 80;
 	TIMSK1 |=  (1 << OCIE1A);
-	TCCR1B |=  (1 << WGM12) | (1 << CS11);	
+	TCCR1B |=  (1 << WGM12) | (1 << CS10);	
+	
 	sei();
 	
 	STATUS_LED_DDR |= STATUS_LED_PIN;
@@ -66,26 +67,31 @@ int main(void)
 				
 			}
 			prevState = state;
-			
 		}
 		
+		
+		if (flagIsr) {
+			flagIsr = 0;	
+			stepCounter--;
+			if (stepCounter == 0) {
+				STEP_PORT |= STEP_PIN;
+				stepCounter = periodZ;
+				} else {
+				STEP_PORT &= ~STEP_PIN;
+			}
+			
+			timerCounter++;
+			if (timerCounter == 2000) {
+				flag10ms = 1;
+				timerCounter= 0;
+			}
+			
+		}
     }
 }
 
-ISR (TIMER1_COMPA_vect) { // every 2us
-	stepCounter--;
-	if (stepCounter == 0) {
-		STEP_PORT |= STEP_PIN;
-		stepCounter = periodZ;
-	} else {
-		STEP_PORT &= ~STEP_PIN;
-	}
-	
-	timerCounter++;
-	if (timerCounter == 5000) {
-		flag10ms = 1;
-		timerCounter = 0;
-	}
+ISR (TIMER1_COMPA_vect) { // every 5us
+	flagIsr = 1;
 	
 }
 
@@ -109,7 +115,7 @@ uint16_t getADCValue() {
 }
 
 void enableDriver() {
-	EN_PORT &= EN_PIN;
+	EN_PORT &= ~EN_PIN;
 }
 void disableDriver() {
 	EN_PORT |= EN_PIN;
