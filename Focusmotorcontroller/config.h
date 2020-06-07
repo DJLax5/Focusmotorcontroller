@@ -16,7 +16,7 @@
 #include <avr/interrupt.h>
 
 #define ADC_MAX					0x1FF
-#define TIMER_TICK				(double) 2e-6
+#define TIMER_TICK				(double) 3e-6
 #define STATUS_LED_PIN			(1 << 5)
 #define STATUS_LED_PORT			PORTB
 #define STATUS_LED_DDR			DDRB

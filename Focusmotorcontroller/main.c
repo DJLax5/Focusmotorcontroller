@@ -47,9 +47,11 @@ int main(void)
 			if (SW_F_PORT & SW_F_PIN) {
 				state = 1;
 				DIR_PORT |= DIR_PIN;
+				STATUS_LED_PORT |= STATUS_LED_PIN;
 			} else if (SW_R_PORT & SW_R_PIN) {
 				state = -1;
 				DIR_PORT &= ~DIR_PIN;
+				STATUS_LED_PORT |= STATUS_LED_PIN;
 			} 
 			
 			
@@ -57,7 +59,10 @@ int main(void)
 				if (state) {
 					enableDriver();
 					stepCounter = periodZ;
-				} else disableDriver();
+				} else {
+					disableDriver();
+					STATUS_LED_PORT &= ~STATUS_LED_PIN;
+				}
 				
 			}
 			prevState = state;
@@ -81,7 +86,7 @@ ISR (TIMER1_COMPA_vect) { // every 2us
 		flag10ms = 1;
 		timerCounter = 0;
 	}
-	STATUS_LED_PORT ^= STATUS_LED_PIN;
+	
 }
 
 
@@ -104,10 +109,10 @@ uint16_t getADCValue() {
 }
 
 void enableDriver() {
-	DIR_PORT &= DIR_PIN;
+	EN_PORT &= EN_PIN;
 }
 void disableDriver() {
-	DIR_PORT |= DIR_PIN;
+	EN_PORT |= EN_PIN;
 }
 
 double adcToSpeed(uint16_t adcVal) {
