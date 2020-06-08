@@ -15,7 +15,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define ADC_MAX					0x1FF
+#define ADC_MAX					1023
 #define TIMER_TICK				(double) 5e-6
 #define STATUS_LED_PIN			(1 << 5)
 #define STATUS_LED_PORT			PORTB
@@ -49,8 +49,9 @@
 #define MICROSTEPPING			16				// mircosteps per step
 #define STEPS_PR				((double) 360.0 / (STEP_SIZE / MICROSTEPPING))
 
-#define MAX_SPEED				20.0				// mm/s
-#define MIN_SPEED				0.1					// mm/s
+#define MAX_SPEED				15.0				// mm/s
+#define MIN_SPEED				0.05					// mm/s
+#define OFF_DELAY				3000
 
 
 

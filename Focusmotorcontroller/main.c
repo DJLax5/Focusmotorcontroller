@@ -11,8 +11,10 @@ uint16_t timerCounter = 0;
 uint32_t stepCounter = 0;
 uint8_t flag10ms = 0;
 uint32_t periodZ = 0;
-int8_t prevState = 0;
+int8_t prevState = 0,state = 0;
 volatile uint8_t flagIsr = 0;
+uint16_t offCounter = 0;
+
 
 
 void init() {
@@ -45,7 +47,7 @@ int main(void)
 			flag10ms = 0;
 			double period = speedToPeriod(adcToSpeed(getADCValue()));
 			periodZ = (uint32_t) (period / TIMER_TICK);
-			uint8_t state = 0;
+			state = 0;
 			if (SW_F_PORT & SW_F_PIN) {
 				state = 1;
 				DIR_PORT |= DIR_PIN;
@@ -56,15 +58,18 @@ int main(void)
 				STATUS_LED_PORT |= STATUS_LED_PIN;
 			} 
 			
-			if (state != prevState) {
-				if (state) {
-					enableDriver();
-					stepCounter = periodZ;
-				} else {
+			
+			if (state) {
+				enableDriver();
+				if (state != prevState) stepCounter = periodZ;
+				offCounter = 0;
+			} else {
+				offCounter++;
+				if (offCounter >= OFF_DELAY) {
 					disableDriver();
-					STATUS_LED_PORT &= ~STATUS_LED_PIN;
+					offCounter = OFF_DELAY;
 				}
-				
+				STATUS_LED_PORT &= ~STATUS_LED_PIN;
 			}
 			prevState = state;
 		}
@@ -73,9 +78,9 @@ int main(void)
 			flagIsr = 0;	
 			stepCounter--;
 			if (stepCounter == 0) {
-				STEP_PORT |= STEP_PIN;
+				if (state!= 0) STEP_PORT |= STEP_PIN;
 				stepCounter = periodZ;
-				} else {
+			} else {
 				STEP_PORT &= ~STEP_PIN;
 			}
 			
