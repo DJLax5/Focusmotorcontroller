@@ -49,8 +49,8 @@
 #define MICROSTEPPING			16				// mircosteps per step
 #define STEPS_PR				((double) 360.0 / (STEP_SIZE / MICROSTEPPING))
 
-#define MAX_SPEED				15.0				// mm/s
-#define MIN_SPEED				0.05					// mm/s
+#define MAX_SPEED				15.0			// mm/s
+#define MIN_SPEED				0.05			// mm/s
 #define OFF_DELAY				3000
 
 
