@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  000000a4  00000000  00000000  00001c28  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000448  00000000  00000000  00001ccc  2**0
+ 10 .debug_str    0000043e  00000000  00000000  00001ccc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000174  00000000  00000000  00002114  2**0
+ 11 .debug_loc    00000174  00000000  00000000  0000210a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000060  00000000  00000000  00002288  2**0
+ 12 .debug_ranges 00000060  00000000  00000000  0000227e  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -96,8 +96,8 @@ double speedToPeriod(double speed) {
 }
   90:	80 e5       	ldi	r24, 0x50	; 80
   92:	90 e0       	ldi	r25, 0x00	; 0
-  94:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__TEXT_REGION_LENGTH__+0x7e0089>
-  98:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7e0088>
+  94:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__DATA_REGION_ORIGIN__+0x29>
+  98:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__DATA_REGION_ORIGIN__+0x28>
   9c:	ef e6       	ldi	r30, 0x6F	; 111
   9e:	f0 e0       	ldi	r31, 0x00	; 0
   a0:	80 81       	ld	r24, Z
@@ -165,9 +165,9 @@ uint16_t getADCValue() {
  10a:	fd cf       	rjmp	.-6      	; 0x106 <getADCValue+0x14>
 	
 	uint8_t low = ADCL;
- 10c:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__TEXT_REGION_LENGTH__+0x7e0078>
+ 10c:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__DATA_REGION_ORIGIN__+0x18>
 	uint8_t high = ADCH;
- 110:	20 91 79 00 	lds	r18, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x7e0079>
+ 110:	20 91 79 00 	lds	r18, 0x0079	; 0x800079 <__DATA_REGION_ORIGIN__+0x19>
 	return (high << 8) | low;
  114:	90 e0       	ldi	r25, 0x00	; 0
 }
